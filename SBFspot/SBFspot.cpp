@@ -1576,6 +1576,7 @@ int GetConfig(Config *cfg)
     strcpy(cfg->TimeFormat, "%H:%M:%S");
     cfg->synchTime = 1;
     cfg->CSV_Export = 1;
+    cfg->LUA_Export = 1;
     cfg->CSV_ExtendedHeader = 1;
     cfg->CSV_Header = 1;
     cfg->CSV_SaveZeroPower = 1;
@@ -1772,6 +1773,17 @@ int GetConfig(Config *cfg)
                     lValue = strtol(value, &pEnd, 10);
                     if (((lValue == 0) || (lValue == 1)) && (*pEnd == 0))
                         cfg->CSV_Export = (int)lValue;
+                    else
+                    {
+                        fprintf(stderr, CFG_InvalidValue, variable, CFG_Boolean);
+                        rc = -2;
+                    }
+                }
+   				else if(stricmp(variable, "LUA_Export") == 0)
+                {
+                    lValue = strtol(value, &pEnd, 10);
+                    if (((lValue == 0) || (lValue == 1)) && (*pEnd == 0))
+                        cfg->LUA_Export = (int)lValue;
                     else
                     {
                         fprintf(stderr, CFG_InvalidValue, variable, CFG_Boolean);
