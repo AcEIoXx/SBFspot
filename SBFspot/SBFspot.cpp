@@ -1302,6 +1302,7 @@ int parseCmdline(int argc, char **argv, Config *cfg)
                 return -1;
             }
             else
+                    cfg->verbose = (int)lValue;
         }
 
 		//force settings to prepare for live loading to http://pvoutput.org/loadlive.jsp
