@@ -586,8 +586,6 @@ int ExportSpotDataToSingleLine(const Config *cfg, InverterData *inverters[])// A
 
 		for (uint32_t inv=0; inverters[inv]!=NULL && inv<MAX_INVERTERS; inv++)
 		{
-			//Calculated Inverter Efficiency
-			float calEfficiency = inverters[inv]->calPdcTot == 0 ? 0 : (float)inverters[inv]->calPacTot / (float)inverters[inv]->calPdcTot * 100;
 
 			fputs(strftime_t(cfg->DateTimeFormat, spottime), csv);
 			fprintf(csv, strout, cfg->delimiter, inverters[inv]->DeviceName);
