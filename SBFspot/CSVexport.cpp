@@ -548,6 +548,7 @@ int ExportSpotDataToCSV(const Config *cfg, InverterData* const inverters[])
 	return 0;
 }
 
+NEW
 int ExportSpotDataToSingleLine(const Config *cfg, InverterData *inverters[])// Added to have a single line csv for lua scripting
 {
 	/*
@@ -564,18 +565,17 @@ int ExportSpotDataToSingleLine(const Config *cfg, InverterData *inverters[])// A
 	time_t spottime = cfg->SpotTimeSource == 0 ? inverters[0]->InverterDatetime : time(NULL);
 
 	//Expand date specifiers in config::outputPath
-	char exportPath[MAX_PATH];
-	snprintf(exportPath, sizeof(exportPath), "%s", strftime_t(cfg->outputPath, spottime));
-	CreatePath(exportPath);
+	std::stringstream csvpath;
+	csvpath << strftime_t(cfg->outputPath, spottime);
+	CreatePath(csvpath.str().c_str());
 
-	char csvpath[MAX_PATH];
-	snprintf(csvpath, sizeof(csvpath), "%s/%s-Spot-SingleLine.csv", exportPath, cfg->plantname);
+	csvpath << FOLDER_SEP << cfg->plantname << "-Spot-SingleLine.csv";
 
-	if ((csv = fopen(csvpath, "w")) == NULL)
+	if ((csv = fopen(csvpath.str().c_str(), "w")) == NULL)
 	{
 		if (cfg->quiet == 0)
 		{
-			snprintf(msg, sizeof(msg), "Unable to open output file %s\n", csvpath);
+			snprintf(msg, sizeof(msg), "Unable to open output file %s\n", csvpath.str().c_str());
 			print_error(stdout, PROC_ERROR, msg);
 		}
 		return -1;
@@ -585,7 +585,7 @@ int ExportSpotDataToSingleLine(const Config *cfg, InverterData *inverters[])// A
 		char FormattedFloat[32];
 		const char *strout = "%c%s";
 
-		for (int inv=0; inverters[inv]!=NULL && inv<MAX_INVERTERS; inv++)
+		for (uint32_t inv=0; inverters[inv]!=NULL && inv<MAX_INVERTERS; inv++)
 		{
 			//Calculated Inverter Efficiency
 			float calEfficiency = inverters[inv]->calPdcTot == 0 ? 0 : (float)inverters[inv]->calPacTot / (float)inverters[inv]->calPdcTot * 100;
@@ -611,7 +611,7 @@ int ExportSpotDataToSingleLine(const Config *cfg, InverterData *inverters[])// A
 			fprintf(csv, strout, cfg->delimiter, FormatFloat(FormattedFloat, (float)inverters[inv]->Uac3/100, 0, cfg->precision, cfg->decimalpoint));
 			fprintf(csv, strout, cfg->delimiter, FormatFloat(FormattedFloat, (float)inverters[inv]->calPdcTot, 0, cfg->precision, cfg->decimalpoint));
 			fprintf(csv, strout, cfg->delimiter, FormatFloat(FormattedFloat, (float)inverters[inv]->TotalPac, 0, cfg->precision, cfg->decimalpoint));
-			fprintf(csv, strout, cfg->delimiter, FormatFloat(FormattedFloat, calEfficiency, 0, cfg->precision, cfg->decimalpoint));
+			fprintf(csv, strout, cfg->delimiter, FormatFloat(FormattedFloat, inverters[inv]->calEfficiency, 0, cfg->precision, cfg->decimalpoint));
 			fprintf(csv, strout, cfg->delimiter, FormatDouble(FormattedFloat, (double)inverters[inv]->EToday/1000, 0, cfg->precision, cfg->decimalpoint));
 			fprintf(csv, strout, cfg->delimiter, FormatDouble(FormattedFloat, (double)inverters[inv]->ETotal/1000, 0, cfg->precision, cfg->decimalpoint));
 			fprintf(csv, strout, cfg->delimiter, FormatFloat(FormattedFloat, (float)inverters[inv]->GridFreq/100, 0, cfg->precision, cfg->decimalpoint));
