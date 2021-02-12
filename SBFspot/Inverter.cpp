@@ -662,7 +662,7 @@ void Inverter::exportSpotData()
         if ((m_config.CSV_Export == 1) && (m_config.nospot == 0))
             ExportSpotDataToCSV(&m_config, m_inverters);
         if (m_config.LUA_Export == 1) // Added to have a single line csv for lua scripting
-			ExportSpotDataToSingleLine(&cfg, Inverters); 
+			ExportSpotDataToSingleLine(&m_config, Inverters); 
 
         if (m_config.wsl == 1)
             ExportSpotDataToWSL(&m_config, m_inverters);
