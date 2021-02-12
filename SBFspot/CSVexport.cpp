@@ -548,7 +548,6 @@ int ExportSpotDataToCSV(const Config *cfg, InverterData* const inverters[])
 	return 0;
 }
 
-NEW
 int ExportSpotDataToSingleLine(const Config *cfg, InverterData *inverters[])// Added to have a single line csv for lua scripting
 {
 	/*
