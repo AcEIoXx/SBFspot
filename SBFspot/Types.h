@@ -90,6 +90,7 @@ struct Config
     char	DateFormat[32];
     char	TimeFormat[32];
     int		CSV_Export;
+    int		LUA_Export;
     int		CSV_Header;
     int		CSV_ExtendedHeader;
     int		CSV_SaveZeroPower;
